@@ -1,0 +1,121 @@
+{% extends "auctions/layout.html"  %}
+{% load static %}
+
+{% block body %}
+<div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center" >
+  <!--Left Col-->
+  <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left" >
+    <h1 class="my-4 text-4xl font-bold leading-tight" >
+      {{item.title}}
+    </h1>
+    
+    <p class=" tracking-loose w-full">{{item.description}}  </p><br>
+    <div>
+      <label style="font-size: 20px; font-weight: bold; padding-right: 10px;">Owner </label>
+      <span >{{owner.username}}</span>
+    </div>
+  
+    <div>
+      <label style="font-size: 20px; font-weight: bold; padding-right: 10px;">Status</label>
+      {% if item.status %}
+      <span style="color: green;">Active</span>
+      {% else %}
+      <span style="color: red;">Inactive</span>
+      {% endif %}
+    </div>
+    <div >
+      <label style="font-size: 20px; font-weight: bold; padding-right: 10px;">Bid Value </label>
+      {% if last_bid %}
+      <label class=" text-2xl">${{last_bid}}</label>  
+      {% else %}
+      <label class=" text-2xl">${{item.starting_bid}}</label>
+      {% endif %}
+    </div>
+    <div>
+      <form method="POST" action="{% url 'auctions:place_bid' %}">
+        {% csrf_token %}
+        {% if item.status %}
+         <input class="p-4" name="new_bid" placeholder="Bid" class="border-gray-600" autofocus style="border: 1px solid slategrey;">
+         <input hidden name="listing_title" value="{{item.title}}" placeholder="">
+         <button class="mx-auto lg:mx-0 hover:underline bg-gray-200 text-gray-900 font-bold
+         rounded-full my-6 py-4 px-8 shadow-lg focus:shadow-outline 
+         transform transition hover:scale-105 duration-300 ease-in-out" type="submit" >Place Bid</button>
+        {% endif %}
+
+      </form>
+    </div>
+    <div>
+
+      {% if message_bid %}
+        <p style="font-weight: bold; color: steelblue;">{{message_bid}}</p>
+        {%else%}
+      {%endif%}
+    </div>
+    
+    
+      <div>
+      {% if privilege %}
+      <form action="{% url 'auctions:end_listing' %}" method="POST">
+        {%csrf_token%}
+        <input hidden name="listing_title" value="{{item.title}}"/>
+        
+        <button class="mx-auto lg:mx-0 hover:underline bg-gray-800 text-white font-bold 
+        rounded my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline 
+        transform transition hover:scale-105 duration-300 ease-in-out flex-1  " 
+        type="submit" style="width: 85%;margin: 6px 10% 6px 5%">Time Up</button>
+      </form>
+      {% endif %}
+      </div>
+      
+      
+
+
+  
+  </div>
+  <!--Right Col-->
+  <div class="w-full md:w-3/5 my-32 py-6 text-center" id="begin">
+    {% load static %}
+    <img class="w-full md:w-4/5 z-50" src="{{item.img_url}}" />
+    
+  </div>
+</div>
+
+
+<div class="container mx-auto bg-white py-2 border-t border-gray-400"></div>
+<div class="container px-3 mx-auto items-center">
+  
+    <h1 class="my-4 text-2xl font-bold leading-tight">
+      Comments
+    </h1>
+    {% for comment in comments %}
+    <div>
+      <p class=" tracking-loose w-full">{{comment.text}} </p>
+      <span class="text-xs">Author: {{comment.author.username}}</span><br>
+      <hr><hr>
+    </div>
+    {% empty %}
+      <h6>No comment has been added yet. </h6>
+    {% endfor %}
+
+    <div class="py-6">
+    <form method="POST" action="{% url 'auctions:add_comment' %}">
+      {% csrf_token%}
+      <label>New comment : </label>
+     <div>
+       
+       <input hidden type="text" value="{{item.title}}" name="listing_title">
+       <input hidden type="text" value="{{owner.username}}" name="owner">
+       <textarea class="form-control" name="commentText" id="commentText" rows="4" cols="50" style="border: 1px solid slategrey;"></textarea>
+       <div>
+        <button class="mx-auto lg:mx-0 hover:underline bg-gray-800 text-white font-bold 
+        rounded  my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline 
+        transform transition hover:scale-105 duration-300 ease-in-out flex-1  " 
+        type="submit" style="width: 35%;margin-left: 1%;" >Add Comment</button>
+      </div>
+     </div> 
+    </form>   
+    </div>
+</div> 
+
+
+{% endblock %}

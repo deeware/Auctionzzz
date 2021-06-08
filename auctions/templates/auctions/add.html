@@ -1,0 +1,51 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<!--form action="{% url 'auctions:add' %}" method="POST">  
+    {% csrf_token %}
+    <div class="form-group">
+     
+        <
+            <input type="text" class="form-control" id="titleInput" placeholder="New entry title " >
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" placeholder="New entry content">
+            </textarea>
+             
+        >
+        {{ new_form.as_table }}
+        <button style="margin-top: 10px;" type="submit" class="btn btn-primary">Submit</button>
+    </div>            
+   
+</form-->
+
+
+<form  action="{% url 'auctions:add' %}" method="POST">
+    {% csrf_token %}
+    <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center text-xl">
+        <h3 width="60%" style="margin-left: 20%;"class="my-4 text-5xl font-bold leading-tight">
+                Add an Item
+              </h3>
+        <table width="80%" style="margin:auto;">
+            {% for field in new_form %}
+            <tr>
+                <td style="text-align: right;">{{field.label}} : </td>
+                <td>
+                    <div class="text-gray-800 leading-normal text-xl m-1 p-6" >{{field}}</div></td>
+            </tr>
+            {% endfor %}
+            
+            
+            <tr >
+                <td colspan="2"><br>
+              <button class="mx-auto lg:mx-0 hover:underline bg-gray-800 text-white font-bold rounded my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out flex-1  " type="submit" value="" style="width: 85%;margin: 6px 10% 6px 5%">
+                Save
+                </button><br><br>
+            </td>
+        </tr>
+    </table>
+    </div>
+    </form>
+
+
+{% endblock %}
+
+

@@ -1,0 +1,55 @@
+{% extends 'auctions/layout.html' %}
+{% load static %}
+
+{% block body %}
+
+
+<section class="bg-white ">
+
+    <div class="container mx-auto flex items-center flex-wrap pt-4 pb-12">
+  
+        <nav id="store" class="w-full z-30 top-0 px-6 ">
+            <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2">
+  
+                <a class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 my-4 text-5xl leading-tight" href="#">
+                Wishlisted Items
+                </a>
+            </div>
+        </nav>
+        <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2 py-3 mx-auto"></div>
+        {% if watchlist %}
+        <table class="table-auto">
+            <thead>
+            <tr>
+                <th class="px-6 py-4">Item Name</th>
+                <th class="px-6 py-4">Starting Bid</th>
+                <th class="px-6 py-4">Description</th>
+                <th class="px-6 py-4">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in watchlist %}
+            <tr >
+                <td class="border px-6 py-4"><a href="{% url 'auctions:listing_details' %}?listing_title={{item.items.title}}" class="hover:underline " style="color: steelblue;">{{item.items.title}}</a></td>
+                <td class="border px-6 py-4">{{item.items.starting_bid}}</td>
+                <td class="border px-6 py-4">{{item.items.description}}</td>
+                <td class="border px-6 py-4"><form action="{% url 'auctions:delete_item_watchlist' %}" method="POST">
+                    {% csrf_token %}
+                    <input hidden name="listing_title" value="{{item.items.title}}"></input>
+                    <button type="submit" class="hover:underline" style="color: tomato;">Remove</button>
+                </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            {% else %}
+            <p class="px-6 py-3">Wishlist empty</p>
+            {% endif %}
+        </table></div>
+    </div>
+
+</section>
+
+
+
+{% endblock  %}
